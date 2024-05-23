@@ -30,14 +30,6 @@ func Connect() *DB {
 
 	println("Connected to MongoDB")
 
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
-
-	// mongo.NewClient(options.Client().ApplyURI(connnectionString))
-
 	err = client.Ping(ctx, readpref.Primary())
 
 	if err != nil {
@@ -82,9 +74,10 @@ func (db *DB) GetJobs() []*model.JobListing {
 }
 
 func (db *DB) CreateJobListing(jobInfo model.CreateJobListingInput) *model.JobListing {
-	jobCollec := db.client.Database("graphql-job-board").Collection("jobs")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+	jobCollec := db.client.Database("graphql-job-board").Collection("jobs")
+
 	inserg, err := jobCollec.InsertOne(ctx, bson.M{"title": jobInfo.Title, "description": jobInfo.Description, "url": jobInfo.URL, "company": jobInfo.Company})
 
 	if err != nil {

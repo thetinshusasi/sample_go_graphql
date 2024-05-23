@@ -11,6 +11,8 @@ import (
 	"github.com/thetinshusasi/sample_go_graphql/graph/model"
 )
 
+var db = database.Connect()
+
 // CreateJobListing is the resolver for the createJobListing field.
 func (r *mutationResolver) CreateJobListing(ctx context.Context, input model.CreateJobListingInput) (*model.JobListing, error) {
 	return db.CreateJobListing(input), nil
@@ -51,4 +53,3 @@ type queryResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
-var db = database.Connect()
